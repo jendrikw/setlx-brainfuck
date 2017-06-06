@@ -1,4 +1,5 @@
 execBF := procedure(code) {
+	code := cleanup(code);
 	braceMap := buildBraceMap(code);
 	//print(braceMap);
 	
