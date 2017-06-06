@@ -1,7 +1,3 @@
-// This brainfuck implementation uses numbers for input and output.
-// Inputting 5 will use the value 5, not the ascii code for the chharcter '5'.
-// The reverse is true for output. A cell with value 5 will, be printed as 5, and not the byte 5.
-
 execBF := procedure(code) {
 	braceMap := buildBraceMap(code);
 	//print(braceMap);
@@ -21,7 +17,7 @@ execBF := procedure(code) {
 			case "<": cellptr := cellptr - 1;
 			case ">": cellptr := cellptr + 1;
 			case ".": nPrint(char(tape[cellptr]));
-			case ",": tape[cellptr] := char2ascii(get()); // TODO: change
+			case ",": tape[cellptr] := char2ascii(get());
 			case "[":
 				if (tape[cellptr] == 0) {
 					codeptr := braceMap[codeptr];
