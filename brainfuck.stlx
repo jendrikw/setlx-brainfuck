@@ -1,0 +1,62 @@
+// This brainfuck implementation uses numbers for input and output.
+// Inputting 5 will use the value 5, not the ascii code for the chharcter '5'.
+// The reverse is true for output. A cell with value 5 will, be printed as 5, and not the byte 5.
+
+execBF := procedure(code) {
+	braceMap := buildBraceMap(code);
+	//print(braceMap);
+	
+	tape := [];
+	cellptr := 1;
+	codeptr := 1;
+	
+	while(codeptr < #code + 1) {
+		//print("tape:" + tape);
+		if (tape[cellptr] == om) {
+			tape[cellptr] := 0;
+		}
+		match (code[codeptr]) {
+			case "+": tape[cellptr] := tape[cellptr] + 1;
+			case "-": tape[cellptr] := tape[cellptr] - 1;
+			case "<": cellptr := cellptr - 1;
+			case ">": cellptr := cellptr + 1;
+			case ".": nPrint(char(tape[cellptr]));
+			case ",": tape[cellptr] := char2ascii(get()); // TODO: change
+			case "[":
+				if (tape[cellptr] == 0) {
+					codeptr := braceMap[codeptr];
+				}
+			case "]":
+				if (tape[cellptr] != 0) {
+					codeptr := braceMap[codeptr];
+				}
+		}
+		codeptr := codeptr + 1;
+	}
+};
+
+char2ascii := procedure(ch) {
+	return arb({n : n in {0..127} | char(n) == ch});
+};
+
+cleanup := procedure(code) {
+	return join([c : c in code | c in "+-><[],."], "");
+};
+
+buildBraceMap := procedure(code) {
+	tmpBraceStack := [];
+	braceMap := {};
+	code := split(code, "");
+	
+	for ([char, pos] in code >< [1 .. #code]) {
+		if (char == "[") {
+			tmpBraceStack := tmpBraceStack + [pos];
+		}
+		if (char == "]") {
+			start := fromE(tmpBraceStack);
+			braceMap[start] := pos;
+			braceMap[pos] := start;
+		}
+	}
+	return braceMap;
+};
